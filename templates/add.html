@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Añadir Receta</title>
+</head>
+<body>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <h1>Añadir Receta</h1>
+    <form action="/add" method="POST" class="add field">
+        <label for="tipo">Tipo de receta:</label><br>
+            <input type="text" id="tipo" name="tipo" required>
+                <dataset id="tipo">
+                    {% for tipo in types %}
+                    <option value="{{tipo}}" ></option>
+                    {% endfor %}
+                </dataset><br>
+        <label for="nombre">Nombre de la receta:</label><br>
+            <input type="text" id="nombre" name="nombre" required><br><br>
+        <label for="ingredientes">Ingredientes:</label><br>
+            <textarea id="ingredientes" name="ingredientes" rows="4" cols="30" required></textarea><br><br>
+        <label for="instrucciones">Instrucciones:</label><br>
+            <textarea id="instrucciones" name="instrucciones" rows="4" cols="30" required></textarea><br><br>
+        <label for="tiempo">Tiempo:</label>
+            <input type="number" id="tiempo" name="tiempo" required min="0">
+            <select name="time" id="time">
+                  <option value="horas">Hs</option>
+                  <option value="minutos">Min</option>
+            </select>
+        <input type="submit" class="button" value="Añadir">
+    </form>
+</body>
+</html>

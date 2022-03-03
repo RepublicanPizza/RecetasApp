@@ -1,0 +1,71 @@
+<html>
+    <head>
+        <title>Mis recetas</title>
+    </head>
+    <body>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="{{url_for('static', filename='javascript/main.js')}}"></script>
+    <a href="{{url_for('home')}}" class="mainTitle" id="mainTitle"><h1>Mis recetas</h1></a>
+
+    <form action="/search" method="GET">
+        <div class="search">
+            <label for="search-type">Busque receta segun:</label>
+            <select name="search-type" id="search-type">
+              <option value="type">Tipo</option>
+              <option value="title">Nombre</option>
+              <option value="ingredients">Ingredientes</option>
+              <option value="instructions">Instrucciones</option>
+              <option value="time">Tiempo</option>
+            </select>
+            <input type="text" id="search" name="search" required>
+            <input type="submit" class="searchButton" value="Buscar">
+        </div>
+    </form>
+
+
+    {% if busqueda_recetas|length > 0 %}
+        <h2>Receta/s encontradas</h2>
+    {% endif %}
+
+    {% for receta in busqueda_recetas %}
+        <div class="receta" >
+            <article class="receta art">
+                <div class="tipo">Tipo : {{receta.type}} <br></div>
+                <div class="title"><span class="title">Nombre : {{receta.title}}<br></span></div>
+                <div class="ingredients"><p>Ingredientes : {{receta.ingredients}}</p></div>
+                <div class="instructions"><p class="instructions">Instrucciones : {{receta.instructions}}</p></div>
+                <p class="time">Tiempo : {{receta.time}} {{receta.time_sel}}</p>
+                <a href="{{url_for('edit', id=receta.id)}}" class="button">Editar</a>
+                <a href="{{url_for('delete', id=receta.id)}}" class="button delete-button">Borrar</a>
+            </article>
+        </div>
+    {% endfor %}
+
+
+    <div class="container">
+    <h3>Recetas:</h3>
+   {% for receta in recetas %}
+
+    <div class="receta" >
+        <article class="receta art">
+            <div class="tipo">Tipo : {{receta.type}} <br></div>
+            <div class="title"><span>Nombre : {{receta.title}}<br></span></div>
+            <div class="ingredients"><p>Ingredientes : {{receta.ingredients}}</p></div>
+            <div class="instructions"><p class="instructions">Instrucciones : {{receta.instructions}}</p></div>
+            <p class="time">Tiempo : {{receta.time}} {{receta.time_sel}}</p>
+            <a href="{{url_for('edit', id=receta.id)}}" class="button">Editar</a>
+            <a href="{{url_for('delete', id=receta.id)}}" class="button delete-button">Borrar</a>
+        </article>
+
+
+    </div>
+
+    {% endfor %}
+    </div>
+
+    <footer class="container text-center add">
+        <a href="{{url_for('add')}}" class="addButton">Añadir receta</a>
+    </footer>
+
+    </body>
+</html>
