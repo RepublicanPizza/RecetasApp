@@ -12,20 +12,20 @@
     <form action="/edit" method="POST">
         <input hidden name="id" value="{{receta.id}}">
         <label for="tipo">Tipo de receta actual</label><br>
-        <input type="text" id="tipo" name="tipo" value="{{receta.type}}" minlength="0">
+        <input type="text" id="tipo" name="tipo" value="{{receta.type}}" required>
         <dataset id="tipo">
             {% for tipo in types %}
             <option value="{{tipo}}" ></option>
             {% endfor %}
         </dataset>
         <label for="nombre">Nombre de la receta actual</label><br>
-        <input type="text" id="nombre" name="nombre" value="{{receta.title}}" minlength="0"><br><br>
+        <input type="text" id="nombre" name="nombre" value="{{receta.title}}" required><br><br>
         <label for="ingredientes">Ingredientes actuales</label><br>
-        <textarea id="ingredientes" name="ingredientes" rows="4" cols="30" minlength="0">{{receta.ingredients}}"</textarea><br><br>
+        <textarea id="ingredientes" name="ingredientes" rows="4" cols="30" required>{{receta.ingredients}}</textarea><br><br>
         <label for="instrucciones">Instrucciones actuales</label><br>
-        <textarea id="instrucciones" name="instrucciones" rows="4" cols="30" minlength="0">{{receta.instructions}}</textarea><br><br>
+        <textarea id="instrucciones" name="instrucciones" rows="4" cols="30" required>{{receta.instructions}}</textarea><br><br>
         <label for="tiempo">Tiempo:</label>
-        <input type="number" id="tiempo" name="tiempo" min="0" value="{{receta.time}}" minlength="0">
+        <input type="number" id="tiempo" name="tiempo" min="0" value="{{receta.time}}" required>
         <select name="time" id="time">
             {% if receta.time_sel == "horas" %}
               <option value="horas" selected>Hs</option>
