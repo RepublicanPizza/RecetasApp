@@ -1,27 +1,33 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
-from flask_sqlalchemy import SQLAlchemy
-from flask_wtf import FlaskForm, CSRFProtect
+#from flask_sqlalchemy import SQLAlchemy
+#from flask_wtf import FlaskForm, CSRFProtect
 from flask_mongoengine import MongoEngine
-import os
+#import os
+from threading import Thread
 
-app = Flask(__name__, static_folder="static")
+
+db = MongoEngine()
+app = Flask("Mis recetas", static_folder="static")
 #app.config['SECRET_KEY'] = os.environ["Secret-key"]
 
 # app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///recetas.db"
 # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # db = SQLAlchemy(app)
+DB_URI = "mongodb+srv://repu:fasdf2314ghfghfg@cluster0.a9o7q.mongodb.net/Recetas?retryWrites=true&w=majority"
+
 
 app.config['MONGODB_SETTINGS'] = {
-    'db': 'Recetas',
-    "host": '127.0.0.1',
-    "port": 27017
+        "host": DB_URI,
+        "connect" :  False
 }
-db = MongoEngine(app)
+
+db.init_app(app)
 
 
 # csrf = CSRFProtect(app)
 # app.secret_key = os.environ["Password"]
 # PASSWORD = "nbicenice"
+
 
 class Receta(db.Document):
     type = db.StringField(required=True)
@@ -41,7 +47,6 @@ class Receta(db.Document):
 # time = db.Column(db.Integer, nullable=False)
 # time_sel = db.Column(db.String(10), nullable=False)
 
-
 # db.create_all()
 
 
@@ -49,7 +54,9 @@ class Receta(db.Document):
 def home():
     # all_recetas = db.session.query(Receta).all()
     all_recetas = Receta.objects.all()
-    return render_template("index.html", recetas=all_recetas, busqueda_recetas=[])
+    return render_template("index.html",
+                           recetas=all_recetas,
+                           busqueda_recetas=[])
 
 
 @app.route("/add", methods=["GET", "POST"])
@@ -66,8 +73,12 @@ def add():
         ingredientes = request.form["ingredientes"]
         time = request.form["tiempo"]
         time_sel = request.form["time"]
-        new_receta = Receta(type=tipo, title=nombre, ingredients=ingredientes,
-                            instructions=instrucciones, time=time, time_sel=time_sel)
+        new_receta = Receta(type=tipo,
+                            title=nombre,
+                            ingredients=ingredientes,
+                            instructions=instrucciones,
+                            time=time,
+                            time_sel=time_sel)
         # db.session.add(new_receta)
         # db.session.commit()
         new_receta.save()
@@ -91,7 +102,8 @@ def edit():
         # receta_to_update.ingredients = request.form["ingredientes"]
         receta_to_update.update(set__ingredients=request.form["ingredientes"])
         # receta_to_update.instructions = request.form["instrucciones"]
-        receta_to_update.update(set__instructions=request.form["instrucciones"])
+        receta_to_update.update(
+            set__instructions=request.form["instrucciones"])
         # receta_to_update.time = request.form["tiempo"]
         receta_to_update.update(set__time=request.form["tiempo"])
         # receta_to_update.time_sel = request.form["time"]
@@ -149,8 +161,20 @@ def search():
     if recipes is None:
         return redirect("index.html")
 
-    return render_template("index.html", recetas=all_recetas, busqueda_recetas=recipes)
+    return render_template("index.html",
+                           recetas=all_recetas,
+                           busqueda_recetas=recipes)
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
+#if __name__ == '__main__':
+#    app.run(debug=True)
+
+
+def run():
+    app.run(host='0.0.0.0', port=1234)
+
+
+def keep_alive():
+    t = Thread(target=run)
+    t.start()
+
